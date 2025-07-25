@@ -1,4 +1,5 @@
 name: CI
+
 on:
   push:
     branches: [ master ]
@@ -8,12 +9,39 @@ on:
 jobs:
   build:
     runs-on: windows-latest
+
     steps:
+    - name: Notify Slack - Started
+      run: |
+        curl -X POST -H 'Content-type: application/json' \
+        --data '{"text":"🚀 CI started for *${{ github.repository }}* on *${{ github.ref_name }}* by *${{ github.actor }}*."}' \
+        ${{ secrets.SLACK_WEBHOOK_URL }}
+
     - name: Checkout
       uses: actions/checkout@v4
+
     - name: Katalon Studio Github Action
       uses: katalon-studio/katalon-studio-github-action@v4.0
       with:
-          version: '9.6.0'
-          projectPath: '${{ github.workspace }}'
-          args: '-noSplash -retry=0 -testSuiteCollectionPath="Test Suites/Simple Test Suite Collection" -apiKey= ${{ secrets.API_KEY }} --config -webui.autoUpdateDrivers=true'
+        version: '9.6.0'
+        projectPath: '${{ github.workspace }}'
+        args: >
+          -noSplash 
+          -retry=0 
+          -testSuiteCollectionPath="Test Suites/Simple Test Suite Collection" 
+          -apiKey=${{ secrets.API_KEY }} 
+          --config -webui.autoUpdateDrivers=true
+
+    - name: Notify Slack - Success
+      if: success()
+      run: |
+        curl -X POST -H 'Content-type: application/json' \
+        --data '{"text":"✅ CI passed for *${{ github.repository }}* on *${{ github.ref_name }}*."}' \
+        ${{ secrets.SLACK_WEBHOOK_URL }}
+
+    - name: Notify Slack - Failure
+      if: failure()
+      run: |
+        curl -X POST -H 'Content-type: application/json' \
+        --data '{"text":"❌ CI failed for *${{ github.repository }}* on *${{ github.ref_name }}*. Check the logs."}' \
+        ${{ secrets.SLACK_WEBHOOK_URL }}
