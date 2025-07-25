@@ -28,6 +28,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v4
 
+    - name: Show path
+      run: echo "${{ github.workspace }}"
+  
     - name: Katalon Studio Github Action
       uses: katalon-studio/katalon-studio-github-action@v4.0
       with:
