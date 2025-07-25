@@ -11,11 +11,15 @@ jobs:
     runs-on: windows-latest
 
     steps:
-    - name: Notify Slack - Started
+    - name: Notify Slack - CI Started
       run: |
-        curl -X POST -H 'Content-type: application/json' \
-        --data '{"text":"🚀 CI started for *${{ github.repository }}* on *${{ github.ref_name }}* by *${{ github.actor }}*."}' \
-        ${{ secrets.SLACK_WEBHOOK_URL }}
+        $payload = @{
+          text = "🚀 CI started for *abhiramdas99/hello-world-reactjs-frontend-app* on *master* by *abhiramdas99*."
+          } | ConvertTo-Json -Compress
+
+          Invoke-RestMethod -Uri ${{ secrets.SLACK_WEBHOOK_URL }} -Method Post -ContentType 'application/json' -Body $payload
+          shell: pwsh
+
 
     - name: Checkout
       uses: actions/checkout@v4
