@@ -22,9 +22,9 @@ jobs:
     - name: Clone Katalon Project Repo
       run: |
         git clone https://${{ secrets.KATALON_REPO_TOKEN }}@github.com/abhiramdas99/copy-of-skillbuilder-qa-automation.git
-      # Use GitHub PAT (if private) with: https://<token>@github.com/your-org/your-katalon-project.git
+        echo "Cloned path: $PWD/copy-of-skillbuilder-qa-automation"
+        # Use GitHub PAT (if private) with: https://<token>@github.com/your-org/your-katalon-project.git
 
-  
     - name: Checkout
       uses: actions/checkout@v4
 
@@ -37,7 +37,7 @@ jobs:
       uses: katalon-studio/katalon-studio-github-action@v4.0
       with:
         version: '9.6.0'
-        projectPath: 'https://github.com/abhiramdas99/copy-of-skillbuilder-qa-automation.git'
+        projectPath: '${{ github.workspace }}/copy-of-skillbuilder-qa-automation'
         args: >
           -noSplash 
           -retry=0 
