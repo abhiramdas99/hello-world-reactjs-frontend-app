@@ -36,10 +36,11 @@ jobs:
         args: >
           -noSplash 
           -retry=0 
-          -testSuiteCollectionPath="Test Suites/Simple Test Suite Collection" 
+          -testSuiteCollectionPath="Test Suites/Core Functionality Sanity" 
           -apiKey=${{ secrets.API_KEY }} 
           --config -webui.autoUpdateDrivers=true
-
+          -disableTestCloud
+          
     - name: Notify Slack - Success
       if: success()
       run: |
