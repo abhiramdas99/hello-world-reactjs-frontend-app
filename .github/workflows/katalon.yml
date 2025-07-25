@@ -14,12 +14,10 @@ jobs:
     - name: Notify Slack - CI Started
       run: |
         $payload = @{
-          text = "🚀 CI started for *abhiramdas99/hello-world-reactjs-frontend-app* on *master* by *abhiramdas99*."
-          } | ConvertTo-Json -Compress
-
-          Invoke-RestMethod -Uri ${{ secrets.SLACK_WEBHOOK_URL }} -Method Post -ContentType 'application/json' -Body $payload
-          shell: pwsh
-
+          text = "🚀 CI started for *${{ github.repository }}* on *${{ github.ref_name }}* by *${{ github.actor }}*."
+        } | ConvertTo-Json -Compress
+        Invoke-RestMethod -Uri "${{ secrets.SLACK_WEBHOOK_URL }}" -Method Post -ContentType 'application/json' -Body $payload
+      shell: pwsh
 
     - name: Checkout
       uses: actions/checkout@v4
@@ -39,13 +37,17 @@ jobs:
     - name: Notify Slack - Success
       if: success()
       run: |
-        curl -X POST -H 'Content-type: application/json' \
-        --data '{"text":"✅ CI passed for *${{ github.repository }}* on *${{ github.ref_name }}*."}' \
-        ${{ secrets.SLACK_WEBHOOK_URL }}
+        $payload = @{
+          text = "✅ CI passed for *${{ github.repository }}* on *${{ github.ref_name }}*."
+        } | ConvertTo-Json -Compress
+        Invoke-RestMethod -Uri "${{ secrets.SLACK_WEBHOOK_URL }}" -Method Post -ContentType 'application/json' -Body $payload
+      shell: pwsh
 
     - name: Notify Slack - Failure
       if: failure()
       run: |
-        curl -X POST -H 'Content-type: application/json' \
-        --data '{"text":"❌ CI failed for *${{ github.repository }}* on *${{ github.ref_name }}*. Check the logs."}' \
-        ${{ secrets.SLACK_WEBHOOK_URL }}
+        $payload = @{
+          text = "❌ CI failed for *${{ github.repository }}* on *${{ github.ref_name }}*. Check the logs."
+        } | ConvertTo-Json -Compress
+        Invoke-RestMethod -Uri "${{ secrets.SLACK_WEBHOOK_URL }}" -Method Post -ContentType 'application/json' -Body $payload
+      shell: pwsh
