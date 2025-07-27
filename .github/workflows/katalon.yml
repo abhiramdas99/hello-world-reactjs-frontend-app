@@ -16,5 +16,5 @@ jobs:
           curl -X POST \
             -H "Authorization: token ${{ secrets.KATALON_REPO_TOKEN }}" \
             -H "Accept: application/vnd.github.v3+json" \
-            https://github.com/abhiramdas99/skillbuilder-qa-automation/blob/master/.github/workflows/katalon.yml/dispatches \
+            https://api.github.com/repos/abhiramdas99/skillbuilder-qa-automation/actions/workflows/katalon.yml/dispatches \
             -d '{"ref":"master"}'
